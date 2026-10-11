@@ -6,6 +6,8 @@ import { Keypad } from "./Keypad";
 import { History } from "./History";
 import { Settings } from "./Settings";
 import { Privacy } from "./Privacy";
+import { UpdatePrompt } from "./UpdatePrompt";
+import { useRegisterSW } from "virtual:pwa-register/react";
 import { loadHistory, addHistoryEntry } from "../storage/history";
 import type { HistoryEntry } from "../storage/history";
 import {
@@ -52,6 +54,35 @@ export function Calculator() {
   const [showHistory, setShowHistory] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [showUpdatePrompt, setShowUpdatePrompt] = useState(false);
+
+  // --- PWA Update detection ---
+  const {
+    needRefresh: [needRefresh],
+    updateServiceWorker,
+  } = useRegisterSW({
+    onRegisteredSW(_swUrl, registration) {
+      // Check for updates every 60 seconds
+      if (registration) {
+        setInterval(() => {
+          registration.update();
+        }, 60 * 1000);
+      }
+    },
+    onRegisterError(error) {
+      console.error("SW registration error:", error);
+    },
+  });
+
+  useEffect(() => {
+    if (needRefresh) {
+      setShowUpdatePrompt(true);
+    }
+  }, [needRefresh]);
+
+  const handleUpdate = () => {
+    updateServiceWorker(true);
+  };
 
   // --- Load persisted state on mount ---
   useEffect(() => {
@@ -280,7 +311,7 @@ export function Calculator() {
 
   // Keyboard
   useEffect(() => {
-    if (showHistory || showSettings || showPrivacy) return;
+    if (showHistory || showSettings || showPrivacy || showUpdatePrompt) return;
     const onKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") return;
@@ -310,7 +341,7 @@ export function Calculator() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [handleKey, showHistory, showSettings, showPrivacy]);
+  }, [handleKey, showHistory, showSettings, showPrivacy, showUpdatePrompt]);
 
   const toggleAngle = () => {
     const next = settings.angleMode === "RAD" ? "DEG" : "RAD";
@@ -455,6 +486,14 @@ export function Calculator() {
       {showPrivacy && (
         <Privacy
           onClose={() => setShowPrivacy(false)}
+          theme={resolvedTheme}
+        />
+      )}
+
+      {showUpdatePrompt && (
+        <UpdatePrompt
+          onUpdate={handleUpdate}
+          onDismiss={() => setShowUpdatePrompt(false)}
           theme={resolvedTheme}
         />
       )}

@@ -7,14 +7,14 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: "prompt",
       includeAssets: [
         "icons/favicon.ico",
         "icons/apple-touch-icon.png",
       ],
       manifest: {
-        name: "CALCX — Premium Calculator",
-        short_name: "CALCX",
+        name: "CalcX — Premium Calculator",
+        short_name: "CalcX",
         description:
           "An iPhone-inspired calculator with history, memory, and scientific mode.",
         theme_color: "#000000",
@@ -54,7 +54,7 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,svg,png,ico,woff2}"],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
-        skipWaiting: true,
+        skipWaiting: false,
       },
       devOptions: {
         enabled: false,
