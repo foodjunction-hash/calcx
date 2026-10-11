@@ -3,7 +3,7 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "app.calcx.twa",
+      "package_name": "app.vercel.calcx_one.twa",
       "sha256_cert_fingerprints": [
         "BC:14:45:7D:0C:E9:A8:4A:B6:77:1E:E0:A2:90:4C:E8:8D:00:6F:0F:84:D0:90:51:2B:95:1B:86:EB:A1:07:F2"
       ]
