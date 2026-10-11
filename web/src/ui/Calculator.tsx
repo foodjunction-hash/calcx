@@ -1,6 +1,5 @@
 ﻿import { useEffect, useState, useCallback } from "react";
 import { evaluate, CalcError } from "../engine/evaluator";
-import type { AngleMode } from "../engine/evaluator";
 import { formatNumber } from "../engine/format";
 import { Display } from "./Display";
 import { Keypad } from "./Keypad";
