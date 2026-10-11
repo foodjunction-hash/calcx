@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { clearAllData } from "../storage/settings";
 import type { Settings as SettingsType } from "../storage/settings";
 import styles from "./Settings.module.css";
+
 interface SettingsProps {
   settings: SettingsType;
   onChange: (s: SettingsType) => void;
   onClose: () => void;
   onDataCleared: () => void;
+  onOpenPrivacy: () => void;
   theme: "dark" | "light";
 }
 
@@ -15,6 +17,7 @@ export function Settings({
   onChange,
   onClose,
   onDataCleared,
+  onOpenPrivacy,
   theme,
 }: SettingsProps) {
   const [confirmingClear, setConfirmingClear] = useState(false);
@@ -268,14 +271,35 @@ export function Settings({
               No account, no tracking, no ads.
             </div>
             <div style={{ marginTop: 12 }}>
+              <button
+                type="button"
+                className={styles.aboutLink}
+                onClick={onOpenPrivacy}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  font: "inherit",
+                  padding: 0,
+                }}
+              >
+                Privacy Policy
+              </button>
+            </div>
+            <div style={{ marginTop: 8 }}>
               <a
                 className={styles.aboutLink}
-                href="https://github.com"
+                href="https://github.com/foodjunction-hash/calcx"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Source & Licenses
               </a>
+            </div>
+            <div style={{ marginTop: 16, fontSize: 12, opacity: 0.7 }}>
+              Devloped by <strong>Shubham CalcX </strong>
+              <br />
+              © 2026 CalcX
             </div>
           </div>
         </div>

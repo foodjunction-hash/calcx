@@ -1,10 +1,12 @@
-import { useEffect, useState, useCallback } from "react";
+﻿import { useEffect, useState, useCallback } from "react";
 import { evaluate, CalcError } from "../engine/evaluator";
+import type { AngleMode } from "../engine/evaluator";
 import { formatNumber } from "../engine/format";
 import { Display } from "./Display";
 import { Keypad } from "./Keypad";
 import { History } from "./History";
 import { Settings } from "./Settings";
+import { Privacy } from "./Privacy";
 import { loadHistory, addHistoryEntry } from "../storage/history";
 import type { HistoryEntry } from "../storage/history";
 import {
@@ -50,6 +52,7 @@ export function Calculator() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
 
   // --- Load persisted state on mount ---
   useEffect(() => {
@@ -105,7 +108,12 @@ export function Calculator() {
     }
     try {
       const v = evaluate(input, { angleMode: settings.angleMode });
-      setDisplay(formatNumber(v, { precision: settings.precision, useThousands: settings.thousandsSeparator }));
+      setDisplay(
+        formatNumber(v, {
+          precision: settings.precision,
+          useThousands: settings.thousandsSeparator,
+        })
+      );
       setIsError(false);
     } catch (e) {
       if (e instanceof CalcError) {
@@ -120,7 +128,12 @@ export function Calculator() {
         setIsError(true);
       }
     }
-  }, [input, settings.angleMode, settings.precision, settings.thousandsSeparator]);
+  }, [
+    input,
+    settings.angleMode,
+    settings.precision,
+    settings.thousandsSeparator,
+  ]);
 
   const handleKey = useCallback(
     (action: string) => {
@@ -268,7 +281,7 @@ export function Calculator() {
 
   // Keyboard
   useEffect(() => {
-    if (showHistory || showSettings) return;
+    if (showHistory || showSettings || showPrivacy) return;
     const onKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") return;
@@ -298,7 +311,7 @@ export function Calculator() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [handleKey, showHistory, showSettings]);
+  }, [handleKey, showHistory, showSettings, showPrivacy]);
 
   const toggleAngle = () => {
     const next = settings.angleMode === "RAD" ? "DEG" : "RAD";
@@ -432,6 +445,17 @@ export function Calculator() {
           onChange={setSettings}
           onClose={() => setShowSettings(false)}
           onDataCleared={handleDataCleared}
+          onOpenPrivacy={() => {
+            setShowSettings(false);
+            setShowPrivacy(true);
+          }}
+          theme={resolvedTheme}
+        />
+      )}
+
+      {showPrivacy && (
+        <Privacy
+          onClose={() => setShowPrivacy(false)}
           theme={resolvedTheme}
         />
       )}
