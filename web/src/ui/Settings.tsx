@@ -260,7 +260,7 @@ export function Settings({
         <div className={styles.section}>
           <h3 className={styles.sectionTitle}>About</h3>
           <div className={styles.about}>
-            <div className={styles.aboutLogo}>CALCX</div>
+            <div className={styles.aboutLogo}>CalcX</div>
             <div>Version 1.0.1</div>
             <div style={{ marginTop: 8 }}>
               An iPhone-inspired calculator.
